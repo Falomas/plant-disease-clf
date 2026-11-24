@@ -16,7 +16,7 @@ https://github.com/Falomas/plant-disease-clf
 
 Итоговый run MLflow: `5fd5ed281bce46088edaef1277d0d4fd`.
 
-Это EfficientNet-B0, опыт `exp3_efficientnet_early_stop`. На run стоит тег `production`. Локальный каталог `mlruns/` в git не входит.
+Это EfficientNet-B0, опыт `exp3_efficientnet_early_stop`. На run стоит тег `production`. Метрики и этот тег лежат в `experiments/summary.json` и `experiments/mlflow_export.json`. Каталог `mlruns/` в git не входит.
 
 ## Данные и препроцессинг
 
@@ -33,22 +33,23 @@ https://github.com/Falomas/plant-disease-clf
 
 Путь через DVC: `artifacts/best_model.onnx.dvc`.
 
-Сам файл `artifacts/best_model.onnx` в git не входит. md5 `0a032a9a2b40b6a062981946bc5b7dc9`, размер 16061189 байт. В контейнере он смонтирован как `/models/best_model.onnx` (`MODEL_ARTIFACT_PATH`).
+Сам файл `artifacts/best_model.onnx` в git не входит. md5 `0a032a9a2b40b6a062981946bc5b7dc9`, размер 16061189 байт. Образ скачивает его при сборке и проверяет этот md5. Путь внутри: `/app/artifacts/best_model.onnx`.
 
 Чекпойнт, из которого собран ONNX: `artifacts/best_model.pt.dvc`, md5 `f0996e849d89ec519a0ad9d0ce98bdd7`.
 
 ## Образ
 
-`plant-disease-clf:1.0.0-4c2cc99`
+`falomas/plant-disease-clf:1.0.0`
 
-Запуск:
+Запуск без клона и без тома:
 
 ```
-docker run --rm -p 8000:8000 -e MODEL_ARTIFACT_PATH=/models/best_model.onnx -v "./artifacts:/models:ro" plant-disease-clf:1.0.0-4c2cc99
+docker pull falomas/plant-disease-clf:1.0.0
+docker run --rm -p 8000:8000 falomas/plant-disease-clf:1.0.0
 ```
 
 ## Проверка
 
-- `poetry run pytest` на этом теге: 8 passed.
-- `bash scripts/smoke_test.sh` на контейнере из образа `plant-disease-clf:1.0.0-4c2cc99`: ответ `/health` со `status` `ok` и `model_loaded` `true`, версия модели `5fd5ed281bce46088edaef1277d0d4fd`; `/docs` открывается; `/predict` по `tests/fixtures/late_blight.jpg` возвращает класс `Tomato___Late_blight`. Скрипт печатает `smoke ok`.
+- `poetry run pytest` на этом теге: 8 passed, если рядом есть `artifacts/best_model.pt` или `artifacts/best_model.onnx`. Без обоих файлов тесты предсказания пропускаются и сеть не качают.
+- Образ без тома отвечает на `/health` (`model_loaded` true, версия `5fd5ed281bce46088edaef1277d0d4fd`) и на `/predict` по `tests/fixtures/late_blight.jpg` классом `Tomato___Late_blight`.
 - Ошибочный запрос: файл не-изображения на `/predict` получает HTTP 400 и текст `Неверный формат изображения.`

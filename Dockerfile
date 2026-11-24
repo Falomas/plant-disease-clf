@@ -21,9 +21,9 @@ COPY --from=builder --chown=appuser:appuser /app/.venv /app/.venv
 COPY --chown=appuser:appuser plant_disease ./plant_disease
 COPY --chown=appuser:appuser configs ./configs
 
-# Публичный ONNX с Google Drive, около 16 МБ. В git этого файла нет.
+# Публичный ONNX с Google Drive. md5 совпадает с указателем DVC.
 RUN mkdir -p /app/artifacts \
-    && python -c "import os, urllib.request; p='/app/artifacts/best_model.onnx'; urllib.request.urlretrieve('https://drive.google.com/uc?export=download&id=1sspa7N29JOkXcEMpzGhPy10Wj9GGMWmP', p); assert os.path.getsize(p) > 1000000, p" \
+    && python -c "import hashlib,urllib.request; p='/app/artifacts/best_model.onnx'; urllib.request.urlretrieve('https://drive.google.com/uc?export=download&id=1sspa7N29JOkXcEMpzGhPy10Wj9GGMWmP', p); d=hashlib.md5(open(p,'rb').read()).hexdigest(); assert d=='0a032a9a2b40b6a062981946bc5b7dc9', d" \
     && chown -R appuser:appuser /app/artifacts
 
 ENV PATH="/app/.venv/bin:${PATH}" \

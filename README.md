@@ -19,7 +19,7 @@ flowchart LR
 - Python 3.11. В `pyproject.toml` указано `>=3.11,<3.12`.
 - Poetry 2.
 - Git, чтобы скачать PlantVillage и посмотреть SHA.
-- Docker, если нужен образ. Проверенный тег: `plant-disease-clf:1.0.0-4c2cc99`.
+- Docker, если нужен образ. Готовый тег: `falomas/plant-disease-clf:1.0.0`.
 
 Проверено на Windows: Python 3.11.9 и Poetry 2.5.2.
 
@@ -82,7 +82,7 @@ poetry run python scripts/run_experiment.py exp2_mobilenet_finetune
 poetry run python scripts/run_experiment.py exp3_efficientnet_early_stop
 ```
 
-Чекпоинт выбирается по val. Test считается один раз в конце. Локальный MLflow пишет каталог `mlruns/`, в git он не входит. Итог уже посчитан: run `5fd5ed281bce46088edaef1277d0d4fd`, сравнение в `experiments/summary.json`.
+Чекпоинт внутри опыта выбирается по val. Победитель трёх опытов тоже берётся по val macro-F1, если задержка не больше 2× baseline. Test считается один раз в конце и в выбор не входит. Итог уже посчитан: run `5fd5ed281bce46088edaef1277d0d4fd`, файлы `experiments/summary.json` и `experiments/mlflow_export.json`. Каталог `mlruns/` в git не входит.
 
 ## Тесты
 
@@ -90,7 +90,7 @@ poetry run python scripts/run_experiment.py exp3_efficientnet_early_stop
 poetry run pytest
 ```
 
-Проверяются конфиг, `/health`, `/predict`, схема ответа и preprocessing без загрузки модели.
+Проверяются конфиг, `/health`, `/predict`, схема ответа и preprocessing без загрузки модели. Если нет `artifacts/best_model.pt`, предсказание берёт локальный `artifacts/best_model.onnx`. Если нет обоих файлов, эти тесты пропускаются. Тест сам модель не скачивает.
 
 ## Сервис
 

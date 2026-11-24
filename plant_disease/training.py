@@ -123,7 +123,7 @@ def upsert_summary(entry):
             "chosen_reason": None,
             "chosen_run_id": None,
             "rule": (
-                "Максимальный macro-F1 на test среди моделей, "
+                "Максимальный macro-F1 на val среди моделей, "
                 "чья средняя задержка не больше 2× baseline."
             ),
             "runs": [],
