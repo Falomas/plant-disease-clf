@@ -8,7 +8,7 @@ https://github.com/Falomas/plant-disease-clf
 
 Имя тега: `v1.0.0`. Тег аннотированный. Он указывает на merge-коммит в `main`, в котором этот файл уже есть. История `main` не переписывалась.
 
-Полный SHA этого коммита совпадает с `git rev-parse v1.0.0` и повторён в сообщении тега. Хеш коммита считается по дереву файлов, поэтому вписать SHA самого merge-коммита в этот файл до его создания нельзя.
+Полный SHA этого коммита — это `git rev-parse v1.0.0^{}`. Тот же SHA записан в сообщении тега.
 
 Коммит документации, поверх которого добавлен отчёт (pull request 22): `2dd45c096355c89a65a95e3d27479ce1bd3144ed`.
 
@@ -49,6 +49,6 @@ docker run --rm -p 8000:8000 -e MODEL_ARTIFACT_PATH=/models/best_model.onnx -v "
 
 ## Проверка
 
-- `poetry run pytest`: 8 passed.
+- `poetry run pytest` на этом теге: 8 passed.
 - `bash scripts/smoke_test.sh` на контейнере из образа `plant-disease-clf:1.0.0-4c2cc99`: ответ `/health` со `status` `ok` и `model_loaded` `true`, версия модели `5fd5ed281bce46088edaef1277d0d4fd`; `/docs` открывается; `/predict` по `tests/fixtures/late_blight.jpg` возвращает класс `Tomato___Late_blight`. Скрипт печатает `smoke ok`.
 - Ошибочный запрос: файл не-изображения на `/predict` получает HTTP 400 и текст `Неверный формат изображения.`
