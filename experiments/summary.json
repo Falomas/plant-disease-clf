@@ -1,0 +1,24 @@
+{
+  "chosen_reason": null,
+  "chosen_run_id": null,
+  "rule": "Максимальный macro-F1 на test среди моделей, чья средняя задержка не больше 2× baseline.",
+  "runs": [
+    {
+      "architecture": "mobilenet_v2",
+      "best_epoch": 4,
+      "checkpoint": "artifacts/runs/exp1_mobilenet_frozen.pt",
+      "early_stopping": false,
+      "eval_preprocess": "v1_baseline",
+      "git_sha": "9647a1602a0e03d86f96c52e19ba82ae7da3ee69",
+      "latency_ms_per_image": 19.072865999996793,
+      "name": "exp1_mobilenet_frozen",
+      "run_id": "6dd11aa5c346432cafc3708e5f069cc5",
+      "test_accuracy": 0.9604037267080745,
+      "test_macro_f1": 0.9564546283900265,
+      "title": "MobileNetV2, замороженный backbone, версия A",
+      "train_preprocess": "v1_baseline",
+      "unfreeze_last_blocks": 0,
+      "val_macro_f1": 0.9504899894228369
+    }
+  ]
+}
