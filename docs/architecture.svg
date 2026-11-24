@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="180" viewBox="0 0 1100 180">
+  <rect width="1100" height="180" fill="#f7f4ef"/>
+  <g font-family="Segoe UI, sans-serif" font-size="15" fill="#1c1917" text-anchor="middle">
+    <rect x="16" y="48" width="120" height="64" rx="8" fill="#fff" stroke="#44403c"/>
+    <text x="76" y="85">Загрузка</text>
+    <rect x="168" y="48" width="100" height="64" rx="8" fill="#fff" stroke="#44403c"/>
+    <text x="218" y="85">DVC</text>
+    <rect x="300" y="48" width="150" height="64" rx="8" fill="#fff" stroke="#44403c"/>
+    <text x="375" y="85">Обучение MLflow</text>
+    <rect x="482" y="48" width="100" height="64" rx="8" fill="#fff" stroke="#44403c"/>
+    <text x="532" y="85">ONNX</text>
+    <rect x="614" y="48" width="110" height="64" rx="8" fill="#fff" stroke="#44403c"/>
+    <text x="669" y="85">Docker</text>
+    <rect x="756" y="48" width="120" height="64" rx="8" fill="#fff" stroke="#44403c"/>
+    <text x="816" y="85">FastAPI</text>
+    <rect x="908" y="48" width="120" height="64" rx="8" fill="#fff" stroke="#44403c"/>
+    <text x="968" y="85">Gradio</text>
+  </g>
+  <g stroke="#44403c" stroke-width="2" fill="#44403c">
+    <line x1="136" y1="80" x2="164" y2="80"/>
+    <polygon points="164,80 156,76 156,84"/>
+    <line x1="268" y1="80" x2="296" y2="80"/>
+    <polygon points="296,80 288,76 288,84"/>
+    <line x1="450" y1="80" x2="478" y2="80"/>
+    <polygon points="478,80 470,76 470,84"/>
+    <line x1="582" y1="80" x2="610" y2="80"/>
+    <polygon points="610,80 602,76 602,84"/>
+    <line x1="724" y1="80" x2="752" y2="80"/>
+    <polygon points="752,80 744,76 744,84"/>
+    <line x1="876" y1="80" x2="904" y2="80"/>
+    <polygon points="904,80 896,76 896,84"/>
+  </g>
+</svg>
