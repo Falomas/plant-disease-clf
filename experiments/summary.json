@@ -36,6 +36,23 @@
       "train_preprocess": "v2_augmented",
       "unfreeze_last_blocks": 4,
       "val_macro_f1": 0.9842893658874291
+    },
+    {
+      "architecture": "efficientnet_b0",
+      "best_epoch": 4,
+      "checkpoint": "artifacts/runs/exp3_efficientnet_early_stop.pt",
+      "early_stopping": true,
+      "eval_preprocess": "v1_baseline",
+      "git_sha": "0a152eb0b1ac44792fa2cbd7226c5418dcc991e3",
+      "latency_ms_per_image": 22.46492099999159,
+      "name": "exp3_efficientnet_early_stop",
+      "run_id": "5fd5ed281bce46088edaef1277d0d4fd",
+      "test_accuracy": 0.9899068322981367,
+      "test_macro_f1": 0.9870264781315404,
+      "title": "EfficientNet-B0, дообучение и early stopping по val, версия B",
+      "train_preprocess": "v2_augmented",
+      "unfreeze_last_blocks": 4,
+      "val_macro_f1": 0.9944349082904738
     }
   ]
 }
