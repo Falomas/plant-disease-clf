@@ -10,6 +10,7 @@ venv/
 *.pt
 *.pth
 *.onnx
+*.onnx.data
 *.ckpt
 
 # Кэши Python и экспериментов
