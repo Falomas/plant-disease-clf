@@ -1,0 +1,23 @@
+# Параметры обучения. Путь к данным здесь не задаётся: его читают из DATA_DIR.
+
+data:
+  split_seed: 42
+  split_manifest: splits/split_manifest.json
+  preprocess_versions:
+    - v1_baseline
+    - v2_augmented
+
+model:
+  architecture: mobilenet_v2
+  num_classes: 8
+  image_size: 224
+
+train:
+  epochs: 10
+  batch_size: 32
+  learning_rate: 0.001
+
+augmentations:
+  # На train — случайная версия B, на val — детерминированная версия A.
+  train_version: v2_augmented
+  eval_version: v1_baseline

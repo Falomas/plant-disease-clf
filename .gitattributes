@@ -3,3 +3,5 @@
 *.md text eol=lf
 *.sha256 text eol=lf
 *.toml text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
