@@ -3,6 +3,8 @@
 data:
   split_seed: 42
   split_manifest: splits/split_manifest.json
+  # Снимки лежат в $DATA_DIR/filtered. Сам каталог задаёт только окружение.
+  image_subdir: filtered
   preprocess_versions:
     - v1_baseline
     - v2_augmented
@@ -13,9 +15,11 @@ model:
   image_size: 224
 
 train:
-  epochs: 10
+  # Потолок маленький: pretrained-веса и CPU. Ранний останов включает только опыт 3.
+  epochs: 4
   batch_size: 32
   learning_rate: 0.001
+  early_stopping_patience: 2
 
 augmentations:
   # На train — случайная версия B, на val — детерминированная версия A.
