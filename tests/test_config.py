@@ -23,7 +23,8 @@ def test_train_and_inference_load_without_code_changes(monkeypatch):
     assert train.data.preprocess_versions == ["v1_baseline", "v2_augmented"]
     assert train.augmentations.train_version == "v2_augmented"
     assert train.augmentations.eval_version == "v1_baseline"
-    assert inference.preprocess_version == "v2_augmented"
+    assert inference.preprocess_version == "v1_baseline"
+    assert inference.model_version == "5fd5ed281bce46088edaef1277d0d4fd"
     assert inference.server.max_upload_bytes == 5_242_880
 
 
