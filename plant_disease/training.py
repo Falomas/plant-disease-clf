@@ -135,6 +135,8 @@ def upsert_summary(entry):
 
 
 def run_experiment(name):
+    # MLflow 3 прячет файловый backend. Нам нужен именно каталог mlruns.
+    os.environ["MLFLOW_ALLOW_FILE_STORE"] = "true"
     os.environ.setdefault("MLFLOW_DISABLE_AGENT_HINT", "1")
     spec = load_spec(name)
     config = load_train_config()
@@ -287,7 +289,10 @@ def run_experiment(name):
             ckpt_path,
         )
         mlflow.log_artifact(str(ckpt_path), artifact_path="checkpoint")
-        mlflow.pytorch.log_model(model, name="model")
+        # pickle, а не pt2: для pt2 MLflow требует пример входа.
+        mlflow.pytorch.log_model(
+            model, name="model", serialization_format="pickle"
+        )
         run_id = run.info.run_id
 
     entry = {
