@@ -1,0 +1,26 @@
+{
+  "atol": 0.0001,
+  "example": "tests/fixtures/black_rot.jpg",
+  "input_dtype": "float32",
+  "input_name": "input",
+  "input_shape": [
+    "batch",
+    3,
+    224,
+    224
+  ],
+  "max_abs_diff": 9.5367431640625e-06,
+  "model_version": "5fd5ed281bce46088edaef1277d0d4fd",
+  "onnx_bytes": 16061189,
+  "onnx_latency_ms": 5.612201999992976,
+  "onnx_path": "artifacts/best_model.onnx",
+  "output_dtype": "float32",
+  "output_name": "logits",
+  "output_shape": [
+    "batch",
+    8
+  ],
+  "preprocess_version": "v1_baseline",
+  "pytorch_latency_ms": 21.057406999989325,
+  "requests": 100
+}
