@@ -12,11 +12,30 @@ from plant_disease.service import create_app
 
 FIXTURE = Path(__file__).parent / "fixtures" / "late_blight.jpg"
 EXPECTED_CLASS = "Tomato___Late_blight"
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def artifact_path():
+    # Сначала локальный чекпоинт. Если его нет в клоне, берём ONNX рядом.
+    # Из сети тест ничего не качает.
+    pt = ROOT / "artifacts" / "best_model.pt"
+    onnx = ROOT / "artifacts" / "best_model.onnx"
+    if pt.is_file():
+        return pt
+    if onnx.is_file():
+        return onnx
+    return None
 
 
 @pytest.fixture(scope="module")
 def client(monkeypatch_module):
-    monkeypatch_module.setenv("MODEL_ARTIFACT_PATH", "artifacts/best_model.pt")
+    path = artifact_path()
+    if path is None:
+        pytest.skip(
+            "Нет artifacts/best_model.pt и artifacts/best_model.onnx. "
+            "Тест модель не скачивает."
+        )
+    monkeypatch_module.setenv("MODEL_ARTIFACT_PATH", str(path))
     return TestClient(create_app())
 
 

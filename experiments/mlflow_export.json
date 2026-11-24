@@ -1,0 +1,34 @@
+{
+  "model_name": "plant-disease-clf",
+  "production_run_id": "5fd5ed281bce46088edaef1277d0d4fd",
+  "rule": "Максимальный macro-F1 на val среди моделей, чья средняя задержка не больше 2× baseline.",
+  "runs": [
+    {
+      "latency_ms_per_image": 19.072865999996793,
+      "name": "exp1_mobilenet_frozen",
+      "production": false,
+      "run_id": "6dd11aa5c346432cafc3708e5f069cc5",
+      "test_accuracy": 0.9604037267080745,
+      "test_macro_f1": 0.9564546283900265,
+      "val_macro_f1": 0.9504899894228369
+    },
+    {
+      "latency_ms_per_image": 18.694955000000846,
+      "name": "exp2_mobilenet_finetune",
+      "production": false,
+      "run_id": "02a2bb638946454d846c34480bf129fc",
+      "test_accuracy": 0.985248447204969,
+      "test_macro_f1": 0.9818483929653219,
+      "val_macro_f1": 0.9842893658874291
+    },
+    {
+      "latency_ms_per_image": 22.46492099999159,
+      "name": "exp3_efficientnet_early_stop",
+      "production": true,
+      "run_id": "5fd5ed281bce46088edaef1277d0d4fd",
+      "test_accuracy": 0.9899068322981367,
+      "test_macro_f1": 0.9870264781315404,
+      "val_macro_f1": 0.9944349082904738
+    }
+  ]
+}
