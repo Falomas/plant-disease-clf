@@ -4,8 +4,11 @@ from io import BytesIO
 from pathlib import Path
 
 import torch
-from fastapi import FastAPI, File, UploadFile
-from PIL import Image
+from fastapi import FastAPI, File, HTTPException, Request, UploadFile
+from fastapi.exception_handlers import request_validation_exception_handler
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+from PIL import Image, UnidentifiedImageError
 from pydantic import BaseModel, Field
 
 from plant_disease.config import load_inference_config
@@ -57,6 +60,15 @@ def create_app() -> FastAPI:
     app.state.transform = transform
     app.state.config = config
 
+    @app.exception_handler(Exception)
+    async def unhandled_error(request: Request, exc: Exception):
+        # 422 остаётся ответом схемы. Остальное не уходит клиенту как traceback.
+        if isinstance(exc, RequestValidationError):
+            return await request_validation_exception_handler(request, exc)
+        if isinstance(exc, HTTPException):
+            return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
+        return JSONResponse(status_code=500, content={"detail": "Внутренняя ошибка сервиса."})
+
     @app.get("/health", response_model=HealthResponse)
     def health():
         return HealthResponse(
@@ -67,10 +79,24 @@ def create_app() -> FastAPI:
         )
 
     @app.post("/predict", response_model=PredictResponse)
-    async def predict(file: UploadFile = File(...)):
+    async def predict(request: Request, file: UploadFile = File(...)):
         # Запрос только читает модель. Веса и режим eval не меняются.
+        limit = config.server.max_upload_bytes
+        content_length = request.headers.get("content-length")
+        if content_length and int(content_length) > limit + 65536:
+            raise HTTPException(status_code=413, detail="Файл больше допустимого размера.")
         raw = await file.read()
-        image = Image.open(BytesIO(raw)).convert("RGB")
+        if len(raw) > limit:
+            raise HTTPException(status_code=413, detail="Файл больше допустимого размера.")
+        content_type = (file.content_type or "").split(";", 1)[0].strip().lower()
+        if content_type and not content_type.startswith("image/"):
+            raise HTTPException(status_code=400, detail="Неверный формат изображения.")
+        if not raw:
+            raise HTTPException(status_code=400, detail="Неверный формат изображения.")
+        try:
+            image = Image.open(BytesIO(raw)).convert("RGB")
+        except (UnidentifiedImageError, OSError):
+            raise HTTPException(status_code=400, detail="Неверный формат изображения.")
         batch = transform(image).unsqueeze(0)
         with torch.inference_mode():
             probs = torch.softmax(app.state.model(batch), dim=1)[0]
