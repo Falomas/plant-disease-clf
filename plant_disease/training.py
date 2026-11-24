@@ -289,7 +289,10 @@ def run_experiment(name):
             ckpt_path,
         )
         mlflow.log_artifact(str(ckpt_path), artifact_path="checkpoint")
-        mlflow.pytorch.log_model(model, name="model")
+        # pickle, а не pt2: для pt2 MLflow требует пример входа.
+        mlflow.pytorch.log_model(
+            model, name="model", serialization_format="pickle"
+        )
         run_id = run.info.run_id
 
     entry = {
