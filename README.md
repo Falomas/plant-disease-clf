@@ -109,6 +109,20 @@ poetry run uvicorn plant_disease.service:create_app --factory
 
 Документация API: `http://127.0.0.1:8000/docs`.
 
+Образ собирается так:
+
+```powershell
+docker build -t "plant-disease-clf:1.0.0-$(git rev-parse --short HEAD)" .
+```
+
+Запуск. Модель приходит только томом, внутри контейнера её считает onnxruntime:
+
+```powershell
+docker run --rm -p 8000:8000 -e MODEL_ARTIFACT_PATH=/models/best_model.onnx -v "./artifacts:/models:ro" "plant-disease-clf:1.0.0-$(git rev-parse --short HEAD)"
+```
+
+Проверка: `bash scripts/smoke_test.sh`.
+
 ## Интерфейс
 
 Сначала запускают сервис из раздела выше. В другом терминале — интерфейс. Адрес API читается из `API_URL`, в коде его нет.

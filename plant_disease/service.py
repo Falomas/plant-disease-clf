@@ -11,6 +11,7 @@ from fastapi.responses import JSONResponse
 from PIL import Image, UnidentifiedImageError
 from pydantic import BaseModel, Field
 
+from plant_disease.classes import CLASS_FOLDERS
 from plant_disease.config import load_inference_config
 from plant_disease.models import build_model
 from plant_disease.preprocess import build_transform
@@ -47,12 +48,36 @@ def load_checkpoint(path: Path):
     return model, classes
 
 
+def _softmax(logits):
+    shifted = logits - logits.max()
+    exp = torch.exp(torch.as_tensor(shifted, dtype=torch.float32))
+    return exp / exp.sum()
+
+
+def load_onnx(path: Path):
+    # В контейнере инференс идёт через onnxruntime, не через PyTorch.
+    import onnxruntime as ort
+
+    session = ort.InferenceSession(str(path), providers=["CPUExecutionProvider"])
+    output = session.get_outputs()[0]
+    if output.shape[-1] not in (None, len(CLASS_FOLDERS)):
+        raise RuntimeError("у ONNX-модели неожиданное число классов")
+    return session, list(CLASS_FOLDERS)
+
+
+def load_model(path: Path):
+    # Локальные тесты остаются на .pt. Контейнер передаёт .onnx.
+    if path.suffix.lower() == ".onnx":
+        return load_onnx(path)
+    return load_checkpoint(path)
+
+
 def create_app() -> FastAPI:
     config = load_inference_config()
     checkpoint = Path(config.model_artifact_path)
     if not checkpoint.is_file():
         raise FileNotFoundError(f"нет файла модели: {checkpoint.name}")
-    model, classes = load_checkpoint(checkpoint)
+    model, classes = load_model(checkpoint)
     transform = build_transform(config.preprocess_version)
     app = FastAPI(title="Классификация заболеваний растений")
     app.state.model = model
@@ -97,13 +122,25 @@ def create_app() -> FastAPI:
             image = Image.open(BytesIO(raw)).convert("RGB")
         except (UnidentifiedImageError, OSError):
             raise HTTPException(status_code=400, detail="Неверный формат изображения.")
-        batch = transform(image).unsqueeze(0)
-        with torch.inference_mode():
-            probs = torch.softmax(app.state.model(batch), dim=1)[0]
-        scores = {
-            name: float(probs[index].item())
-            for index, name in enumerate(app.state.classes)
-        }
+        features = transform(image)
+        if checkpoint.suffix.lower() == ".onnx":
+            # Сессия onnxruntime только читает граф, веса не меняются.
+            logits = app.state.model.run(
+                ["logits"], {"input": features.unsqueeze(0).numpy()}
+            )[0][0]
+            probs = _softmax(logits)
+            scores = {
+                name: float(probs[index].item())
+                for index, name in enumerate(app.state.classes)
+            }
+        else:
+            batch = features.unsqueeze(0)
+            with torch.inference_mode():
+                probs = torch.softmax(app.state.model(batch), dim=1)[0]
+            scores = {
+                name: float(probs[index].item())
+                for index, name in enumerate(app.state.classes)
+            }
         label = max(scores, key=scores.get)
         return PredictResponse(
             class_name=label,
