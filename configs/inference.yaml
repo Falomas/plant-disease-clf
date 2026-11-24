@@ -1,0 +1,11 @@
+# Инференс. Путь к модели здесь не задаётся: его читают из MODEL_ARTIFACT_PATH.
+# Итоговый эксперимент ещё не выбран, поэтому preprocessing пока как у версии B.
+
+preprocess_version: v2_augmented
+
+server:
+  host: 127.0.0.1
+  port: 8000
+  # Около 5 МиБ. Больший файл сервис позже отклонит.
+  max_upload_bytes: 5242880
+  request_timeout_seconds: 30
