@@ -1,0 +1,47 @@
+[project]
+name = "plant-disease-clf"
+version = "0.1.0"
+description = "Классификация заболеваний растений по изображениям листьев"
+authors = [
+    { name = "Falomas", email = "4681287@gmail.com" },
+]
+requires-python = ">=3.11,<3.12"
+# Зависимости описаны в [tool.poetry.dependencies]: у torch и torchvision свой индекс.
+dynamic = ["dependencies"]
+
+[tool.poetry]
+# Пакета с кодом ещё нет: Poetry ставит только зависимости.
+package-mode = false
+
+# CPU-колёса PyTorch, без CUDA. Источник явный, с PyPI эти пакеты не берутся.
+[[tool.poetry.source]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "explicit"
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.12"
+# Обучение и учёт экспериментов
+torch = { version = ">=2.2.0", source = "pytorch-cpu" }
+torchvision = { version = ">=0.17.0", source = "pytorch-cpu" }
+mlflow = ">=2.16.0"
+dvc = ">=3.50.0"
+# Инференс, экспорт и интерфейс
+fastapi = ">=0.115.0"
+uvicorn = { version = ">=0.30.0", extras = ["standard"] }
+onnx = ">=1.16.0"
+onnxruntime = ">=1.19.0"
+gradio = ">=4.44.0"
+# Конфигурация
+pydantic-settings = ">=2.4.0"
+pyyaml = ">=6.0.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8.3.0"
+pytest-cov = ">=5.0.0"
+ruff = ">=0.6.0"
+black = ">=24.8.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
