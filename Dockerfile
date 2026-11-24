@@ -21,9 +21,15 @@ COPY --from=builder --chown=appuser:appuser /app/.venv /app/.venv
 COPY --chown=appuser:appuser plant_disease ./plant_disease
 COPY --chown=appuser:appuser configs ./configs
 
+# Публичный ONNX с Google Drive, около 16 МБ. В git этого файла нет.
+RUN mkdir -p /app/artifacts \
+    && python -c "import os, urllib.request; p='/app/artifacts/best_model.onnx'; urllib.request.urlretrieve('https://drive.google.com/uc?export=download&id=1sspa7N29JOkXcEMpzGhPy10Wj9GGMWmP', p); assert os.path.getsize(p) > 1000000, p" \
+    && chown -R appuser:appuser /app/artifacts
+
 ENV PATH="/app/.venv/bin:${PATH}" \
     PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    MODEL_ARTIFACT_PATH=/app/artifacts/best_model.onnx
 
 USER appuser
 EXPOSE 8000
