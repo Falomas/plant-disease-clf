@@ -15,6 +15,7 @@ from plant_disease.preprocess import SPECS
 
 ROOT = Path(__file__).resolve().parents[1]
 TRAIN_YAML = ROOT / "configs" / "train.yaml"
+INFERENCE_YAML = ROOT / "configs" / "inference.yaml"
 
 # Имена полей и соответствующие переменные окружения.
 ENV_NAMES = {
@@ -155,4 +156,46 @@ def load_train_config(
         _known_version(name)
     _known_version(cfg.augmentations.train_version)
     _known_version(cfg.augmentations.eval_version)
+    return cfg
+
+
+class ServerSection(BaseModel):
+    host: str = Field(min_length=1)
+    port: int = Field(gt=0, le=65535)
+    max_upload_bytes: int = Field(gt=0)
+    request_timeout_seconds: int = Field(gt=0)
+
+
+class InferenceConfig(BaseSettings):
+    # Файл модели. В YAML его нет.
+    model_artifact_path: str = Field(min_length=1)
+    # Заготовка: итоговый эксперимент ещё не выбран, пока берём v2_augmented.
+    preprocess_version: str = Field(min_length=1)
+    server: ServerSection
+
+    @field_validator("model_artifact_path")
+    @classmethod
+    def _strip_model_path(cls, value: str) -> str:
+        value = value.strip()
+        if not value:
+            raise ValueError("пусто")
+        return value
+
+
+def load_inference_config(
+    yaml_path: Path | None = None,
+    env_file: str | None = ".env",
+) -> InferenceConfig:
+    """Возвращает разобранный inference-конфиг. Код обучения для этого не нужен."""
+    path = Path(yaml_path) if yaml_path else INFERENCE_YAML
+    if not path.is_file():
+        raise ConfigError(f"Не найден файл конфигурации {_display_path(path)}.")
+    settings_cls = _with_yaml(InferenceConfig, path, env_file)
+    try:
+        cfg = settings_cls()
+    except ValidationError as exc:
+        raise _config_error(
+            exc, f"{_display_path(path)} и переменную MODEL_ARTIFACT_PATH"
+        ) from None
+    _known_version(cfg.preprocess_version)
     return cfg
