@@ -1,0 +1,46 @@
+{
+  "augment_seed": 42,
+  "base": "v1_baseline",
+  "id": "v2_augmented",
+  "steps": [
+    {
+      "name": "random_resized_crop",
+      "scale": [
+        0.8,
+        1.0
+      ],
+      "size": 224
+    },
+    {
+      "name": "horizontal_flip",
+      "p": 0.5
+    },
+    {
+      "degrees": 15,
+      "name": "rotation"
+    },
+    {
+      "brightness": 0.2,
+      "contrast": 0.2,
+      "hue": 0.05,
+      "name": "color_jitter",
+      "saturation": 0.2
+    },
+    {
+      "name": "to_tensor"
+    },
+    {
+      "mean": [
+        0.485,
+        0.456,
+        0.406
+      ],
+      "name": "imagenet_normalize",
+      "std": [
+        0.229,
+        0.224,
+        0.225
+      ]
+    }
+  ]
+}
