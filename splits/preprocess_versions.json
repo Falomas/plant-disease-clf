@@ -1,0 +1,10 @@
+{
+  "v1_baseline": {
+    "path": "splits/preprocess_v1_baseline.json",
+    "sha256": "b634c08ddfb8c8cd8ee6ecd287cbf70990ab91c2434ac0055a63c2af14784dc8"
+  },
+  "v2_augmented": {
+    "path": "splits/preprocess_v2_augmented.json",
+    "sha256": "1550d83c22fd005335cac4927ed1d960de9edd9ba101edc9ed9074a4fcf6445c"
+  }
+}
