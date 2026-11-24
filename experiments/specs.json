@@ -1,0 +1,23 @@
+{
+  "exp1_mobilenet_frozen": {
+    "architecture": "mobilenet_v2",
+    "early_stopping": false,
+    "title": "MobileNetV2, замороженный backbone, версия A",
+    "train_preprocess": "v1_baseline",
+    "unfreeze_last_blocks": 0
+  },
+  "exp2_mobilenet_finetune": {
+    "architecture": "mobilenet_v2",
+    "early_stopping": false,
+    "title": "MobileNetV2, дообучение верхних слоёв, версия B",
+    "train_preprocess": "v2_augmented",
+    "unfreeze_last_blocks": 4
+  },
+  "exp3_efficientnet_early_stop": {
+    "architecture": "efficientnet_b0",
+    "early_stopping": true,
+    "title": "EfficientNet-B0, дообучение и early stopping по val, версия B",
+    "train_preprocess": "v2_augmented",
+    "unfreeze_last_blocks": 4
+  }
+}
