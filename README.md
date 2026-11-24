@@ -90,10 +90,27 @@ poetry run python scripts/write_checksums.py
 Формат файлов — YAML. Обучение и инференс разведены по двум файлам, переключение не требует правки кода.
 
 - `configs/train.yaml` — данные, модель, обучение и аугментации. `split_seed` равен 42. Версии препроцессинга: `v1_baseline` и `v2_augmented`.
-- `configs/inference.yaml` — версия препроцессинга инференса и лимиты сервера. Пока это заготовка `v2_augmented`.
+- `configs/inference.yaml` — версия препроцессинга инференса и лимиты сервера. Для итогового опыта это `v1_baseline`, без обучающих аугментаций.
 
 Пути к данным и модели в YAML не записаны. Их задают переменные `DATA_DIR` и `MODEL_ARTIFACT_PATH`, шаблон — `.env.example`.
 
 Загрузка идёт через pydantic-settings. Если обязательного значения нет, программа останавливается короткой ошибкой, например: `Не задан обязательный параметр: DATA_DIR. Проверьте configs/train.yaml и переменную DATA_DIR.`
 
-Разобранный train-конфиг возвращает `load_train_config()` из `plant_disease/config.py`. Проверка: `poetry run pytest tests/test_config.py`.
+Разобранный train-конфиг возвращает `load_train_config()` из `plant_disease/config.py`.
+
+## Сервис
+
+Путь к чекпоинту задаётся только переменной `MODEL_ARTIFACT_PATH`. Запуск:
+
+```powershell
+$env:MODEL_ARTIFACT_PATH = "artifacts/best_model.pt"
+poetry run uvicorn plant_disease.service:create_app --factory
+```
+
+Документация API: `http://127.0.0.1:8000/docs`.
+
+Тесты, включая `/health`, `/predict` и preprocessing без загрузки модели:
+
+```powershell
+poetry run pytest
+```
