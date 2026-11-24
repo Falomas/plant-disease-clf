@@ -61,7 +61,7 @@ poetry run python scripts/write_checksums.py
 
 Ожидаемый sha256 манифеста: `c492e8872d6d20fb7ca19cbb70e750a412e66ac0ecbccf3458c13704b6a82a93`.
 
-Снимки лежат в `data/filtered` и отслеживаются DVC. Общего удалённого хранилища нет, секрет для него не нужен: преподаватель получает те же файлы скриптом выше. Веса `artifacts/best_model.pt` тоже в DVC, не в git. ONNX рядом: `artifacts/best_model.onnx`, его собирает `scripts/export_onnx.py`. Карточка модели: [MODEL_CARD.md](MODEL_CARD.md).
+Снимки лежат в `data/filtered` и отслеживаются DVC. Общего удалённого хранилища нет, секрет для него не нужен: преподаватель получает те же файлы скриптом выше. Веса `artifacts/best_model.pt` тоже в DVC, не в git. ONNX рядом: `artifacts/best_model.onnx`, указатель `artifacts/best_model.onnx.dvc`, его собирает `scripts/export_onnx.py`. Карточка модели: [MODEL_CARD.md](MODEL_CARD.md).
 
 ## Конфигурация
 
