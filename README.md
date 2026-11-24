@@ -84,3 +84,16 @@ poetry run python scripts/write_checksums.py
 ```
 
 Ожидаемый sha256 манифеста: `c492e8872d6d20fb7ca19cbb70e750a412e66ac0ecbccf3458c13704b6a82a93`.
+
+## Конфигурация
+
+Формат файлов — YAML. Обучение и инференс разведены по двум файлам, переключение не требует правки кода.
+
+- `configs/train.yaml` — данные, модель, обучение и аугментации. `split_seed` равен 42. Версии препроцессинга: `v1_baseline` и `v2_augmented`.
+- `configs/inference.yaml` — версия препроцессинга инференса и лимиты сервера. Пока это заготовка `v2_augmented`.
+
+Пути к данным и модели в YAML не записаны. Их задают переменные `DATA_DIR` и `MODEL_ARTIFACT_PATH`, шаблон — `.env.example`.
+
+Загрузка идёт через pydantic-settings. Если обязательного значения нет, программа останавливается короткой ошибкой, например: `Не задан обязательный параметр: DATA_DIR. Проверьте configs/train.yaml и переменную DATA_DIR.`
+
+Разобранный train-конфиг возвращает `load_train_config()` из `plant_disease/config.py`. Проверка: `poetry run pytest tests/test_config.py`.
