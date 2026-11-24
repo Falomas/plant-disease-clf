@@ -1,0 +1,12 @@
+.git
+data
+.env
+mlruns
+tests
+.venv
+artifacts
+**/__pycache__
+.dvc/cache
+*.pt
+*.onnx
+*.onnx.data
