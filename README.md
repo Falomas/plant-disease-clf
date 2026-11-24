@@ -119,7 +119,14 @@ curl.exe -F "file=@tests/fixtures/late_blight.jpg;type=image/jpeg" http://127.0.
 
 ## Docker
 
-Сборка. Тег содержит версию и короткий SHA, тега `latest` нет. Файл ONNX скачивается при сборке, том с моделью не нужен.
+Без клона репозитория:
+
+```powershell
+docker pull falomas/plant-disease-clf:1.0.0
+docker run --rm -p 8000:8000 falomas/plant-disease-clf:1.0.0
+```
+
+Сборка из исходников. Тег содержит версию и короткий SHA, тега `latest` нет. Файл ONNX скачивается при сборке, том с моделью не нужен.
 
 ```powershell
 docker build -t "plant-disease-clf:1.0.0-$(git rev-parse --short HEAD)" .
