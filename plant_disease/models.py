@@ -9,11 +9,14 @@ from torchvision.models import (
 )
 
 
-def build_model(architecture, num_classes, unfreeze_last_blocks):
+def build_model(architecture, num_classes, unfreeze_last_blocks, pretrained=True):
+    # На инференсе свои веса уже в чекпоинте, ImageNet качать не нужно.
     if architecture == "mobilenet_v2":
-        model = mobilenet_v2(weights=MobileNet_V2_Weights.DEFAULT)
+        weights = MobileNet_V2_Weights.DEFAULT if pretrained else None
+        model = mobilenet_v2(weights=weights)
     elif architecture == "efficientnet_b0":
-        model = efficientnet_b0(weights=EfficientNet_B0_Weights.DEFAULT)
+        weights = EfficientNet_B0_Weights.DEFAULT if pretrained else None
+        model = efficientnet_b0(weights=weights)
     else:
         raise ValueError(f"неизвестная архитектура: {architecture}")
 

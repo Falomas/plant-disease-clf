@@ -173,8 +173,10 @@ class ServerSection(BaseModel):
 class InferenceConfig(BaseSettings):
     # Файл модели. В YAML его нет.
     model_artifact_path: str = Field(min_length=1)
-    # Заготовка: итоговый эксперимент ещё не выбран, пока берём v2_augmented.
+    # Версия preprocessing. Для итогового опыта это v1_baseline, как на test.
     preprocess_version: str = Field(min_length=1)
+    # Идентификатор модели, не путь к файлу.
+    model_version: str = Field(min_length=1)
     server: ServerSection
 
     @field_validator("model_artifact_path")

@@ -1,7 +1,8 @@
 # Инференс. Путь к модели здесь не задаётся: его читают из MODEL_ARTIFACT_PATH.
-# Итоговый эксперимент ещё не выбран, поэтому preprocessing пока как у версии B.
+# Test итогового опыта считался без обучающих аугментаций, версия A.
 
-preprocess_version: v2_augmented
+preprocess_version: v1_baseline
+model_version: 5fd5ed281bce46088edaef1277d0d4fd
 
 server:
   host: 127.0.0.1
