@@ -10,7 +10,7 @@
 
 Итоговый run MLflow: `5fd5ed281bce46088edaef1277d0d4fd`. Это EfficientNet-B0, дообучение верхних слоёв, early stopping по val, данные `v2_augmented`. На run стоит тег `production`.
 
-Веса PyTorch: `artifacts/best_model.pt`, в git не входят, их держит DVC (`artifacts/best_model.pt.dvc`, md5 `f0996e849d89ec519a0ad9d0ce98bdd7`). Экспорт: `scripts/export_onnx.py`. Файл `artifacts/best_model.onnx` тоже не в git: указатель `artifacts/best_model.onnx.dvc`, md5 `0a032a9a2b40b6a062981946bc5b7dc9`. В контейнере его подключают томом, путь `MODEL_ARTIFACT_PATH=/models/best_model.onnx`.
+Веса PyTorch: `artifacts/best_model.pt`, в git не входят, их держит DVC (`artifacts/best_model.pt.dvc`, md5 `f0996e849d89ec519a0ad9d0ce98bdd7`). Экспорт: `scripts/export_onnx.py`. Файл `artifacts/best_model.onnx` тоже не в git: указатель `artifacts/best_model.onnx.dvc`, md5 `0a032a9a2b40b6a062981946bc5b7dc9`. В образе файл скачивается при сборке в `/app/artifacts/best_model.onnx`, туда же указывает `MODEL_ARTIFACT_PATH`. Отдельный том не нужен.
 
 Вход ONNX `input`: float32, `batch × 3 × 224 × 224`. Выход `logits`: float32, `batch × 8`. Препроцессинг инференса и test — `v1_baseline`, без обучающих аугментаций.
 

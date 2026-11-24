@@ -119,17 +119,19 @@ curl.exe -F "file=@tests/fixtures/late_blight.jpg;type=image/jpeg" http://127.0.
 
 ## Docker
 
-Сборка. Тег содержит версию и короткий SHA, тега `latest` нет:
+Сборка. Тег содержит версию и короткий SHA, тега `latest` нет. Файл ONNX скачивается при сборке, том с моделью не нужен.
 
 ```powershell
 docker build -t "plant-disease-clf:1.0.0-$(git rev-parse --short HEAD)" .
 ```
 
-Проверенный образ: `plant-disease-clf:1.0.0-4c2cc99`. Запуск, модель только томом:
+Запуск:
 
 ```powershell
-docker run --rm -p 8000:8000 -e MODEL_ARTIFACT_PATH=/models/best_model.onnx -v "./artifacts:/models:ro" plant-disease-clf:1.0.0-4c2cc99
+docker run --rm -p 8000:8000 plant-disease-clf:1.0.0-$(git rev-parse --short HEAD)
 ```
+
+Внутри образ задаёт `MODEL_ARTIFACT_PATH=/app/artifacts/best_model.onnx`.
 
 Проверка: `bash scripts/smoke_test.sh`.
 
