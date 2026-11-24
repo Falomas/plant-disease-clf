@@ -1,6 +1,33 @@
 {
-  "chosen_reason": null,
-  "chosen_run_id": null,
+  "chosen_reason": "Лимит 38.146 мс/снимок — это 2× baseline (19.073). exp1_mobilenet_frozen: test macro-F1 0.9565, задержка 19.073 мс/снимок exp2_mobilenet_finetune: test macro-F1 0.9818, задержка 18.695 мс/снимок exp3_efficientnet_early_stop: test macro-F1 0.9870, задержка 22.465 мс/снимок Все три опыта внутри лимита. Максимальный test macro-F1 у exp3_efficientnet_early_stop.",
+  "chosen_run_id": "5fd5ed281bce46088edaef1277d0d4fd",
+  "comparison": [
+    {
+      "latency_ms_per_image": 19.072865999996793,
+      "name": "exp1_mobilenet_frozen",
+      "run_id": "6dd11aa5c346432cafc3708e5f069cc5",
+      "test_accuracy": 0.9604037267080745,
+      "test_macro_f1": 0.9564546283900265,
+      "within_latency_limit": true
+    },
+    {
+      "latency_ms_per_image": 18.694955000000846,
+      "name": "exp2_mobilenet_finetune",
+      "run_id": "02a2bb638946454d846c34480bf129fc",
+      "test_accuracy": 0.985248447204969,
+      "test_macro_f1": 0.9818483929653219,
+      "within_latency_limit": true
+    },
+    {
+      "latency_ms_per_image": 22.46492099999159,
+      "name": "exp3_efficientnet_early_stop",
+      "run_id": "5fd5ed281bce46088edaef1277d0d4fd",
+      "test_accuracy": 0.9899068322981367,
+      "test_macro_f1": 0.9870264781315404,
+      "within_latency_limit": true
+    }
+  ],
+  "latency_limit_ms": 38.145731999993586,
   "rule": "Максимальный macro-F1 на test среди моделей, чья средняя задержка не больше 2× baseline.",
   "runs": [
     {
