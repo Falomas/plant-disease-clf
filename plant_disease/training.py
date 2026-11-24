@@ -135,6 +135,8 @@ def upsert_summary(entry):
 
 
 def run_experiment(name):
+    # MLflow 3 прячет файловый backend. Нам нужен именно каталог mlruns.
+    os.environ["MLFLOW_ALLOW_FILE_STORE"] = "true"
     os.environ.setdefault("MLFLOW_DISABLE_AGENT_HINT", "1")
     spec = load_spec(name)
     config = load_train_config()
