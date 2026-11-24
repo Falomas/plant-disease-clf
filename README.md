@@ -70,3 +70,17 @@ PyTorch и torchvision ставятся из CPU-индекса `https://downloa
 ```bash
 .venv/bin/python -c "import torch; print(torch.__version__)"
 ```
+
+## Данные
+
+Восемь классов PlantVillage. Источник, лицензия, сплит и версии препроцессинга описаны в [DATASET_CARD.md](DATASET_CARD.md).
+
+Скачивание и проверка, что файлы те же:
+
+```powershell
+poetry run python scripts/download_plantvillage.py
+poetry run python scripts/make_split.py
+poetry run python scripts/write_checksums.py
+```
+
+Ожидаемый sha256 манифеста: `c492e8872d6d20fb7ca19cbb70e750a412e66ac0ecbccf3458c13704b6a82a93`.

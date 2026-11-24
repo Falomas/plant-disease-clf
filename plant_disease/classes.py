@@ -2,6 +2,8 @@
 
 SOURCE_REPO = "https://github.com/spMohanty/PlantVillage-Dataset.git"
 SOURCE_VARIANT = "raw/color"
+# Зафиксированный снимок репозитория. Клон без этого коммита может уехать вперёд.
+SOURCE_COMMIT = "7f7ecc7e1eaca78107e3affe7cb5abd9427e139a"
 
 CLASS_FOLDERS = [
     "Apple___Apple_scab",
