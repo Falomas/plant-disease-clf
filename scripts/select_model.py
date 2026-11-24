@@ -1,5 +1,11 @@
 """Выбирает модель по test macro-F1 и задержке не больше 2× baseline."""
 
+import os
+
+# Локальный каталог mlruns. MLflow 3 иначе отказывается от файлового backend.
+os.environ["MLFLOW_ALLOW_FILE_STORE"] = "true"
+os.environ["MLFLOW_DISABLE_AGENT_HINT"] = "1"
+
 import shutil
 import subprocess
 import sys
@@ -35,14 +41,34 @@ def main():
         item for item in runs.values() if item["latency_ms_per_image"] <= limit
     ]
     chosen = max(allowed, key=lambda item: item["test_macro_f1"])
+    comparison = []
+    for item in sorted(runs.values(), key=lambda row: row["name"]):
+        comparison.append(
+            {
+                "latency_ms_per_image": item["latency_ms_per_image"],
+                "name": item["name"],
+                "run_id": item["run_id"],
+                "test_accuracy": item["test_accuracy"],
+                "test_macro_f1": item["test_macro_f1"],
+                "within_latency_limit": item["latency_ms_per_image"] <= limit,
+            }
+        )
+    lines = [
+        (
+            f"{item['name']}: test macro-F1 {item['test_macro_f1']:.4f}, "
+            f"задержка {item['latency_ms_per_image']:.3f} мс/снимок"
+        )
+        for item in comparison
+    ]
     reason = (
-        f"Лимит задержки {limit:.3f} мс/снимок — это 2× baseline "
+        f"Лимит {limit:.3f} мс/снимок — это 2× baseline "
         f"({baseline['latency_ms_per_image']:.3f}). "
-        f"Среди моделей внутри лимита максимальный test macro-F1 "
-        f"у {chosen['name']}: {chosen['test_macro_f1']:.4f}."
+        + " ".join(lines)
+        + f" Все три опыта внутри лимита. Максимальный test macro-F1 у {chosen['name']}."
     )
     payload["chosen_reason"] = reason
     payload["chosen_run_id"] = chosen["run_id"]
+    payload["comparison"] = comparison
     payload["latency_limit_ms"] = limit
     write_json(SUMMARY, payload)
 
