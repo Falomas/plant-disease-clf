@@ -19,6 +19,23 @@
       "train_preprocess": "v1_baseline",
       "unfreeze_last_blocks": 0,
       "val_macro_f1": 0.9504899894228369
+    },
+    {
+      "architecture": "mobilenet_v2",
+      "best_epoch": 4,
+      "checkpoint": "artifacts/runs/exp2_mobilenet_finetune.pt",
+      "early_stopping": false,
+      "eval_preprocess": "v1_baseline",
+      "git_sha": "8e39f9118a7c53f4afdf9f02dd395fc5f7066886",
+      "latency_ms_per_image": 18.694955000000846,
+      "name": "exp2_mobilenet_finetune",
+      "run_id": "02a2bb638946454d846c34480bf129fc",
+      "test_accuracy": 0.985248447204969,
+      "test_macro_f1": 0.9818483929653219,
+      "title": "MobileNetV2, дообучение верхних слоёв, версия B",
+      "train_preprocess": "v2_augmented",
+      "unfreeze_last_blocks": 4,
+      "val_macro_f1": 0.9842893658874291
     }
   ]
 }
