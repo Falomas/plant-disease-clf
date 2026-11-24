@@ -31,6 +31,8 @@ class ConfigError(Exception):
 class DataSection(BaseModel):
     split_seed: int
     split_manifest: str = Field(min_length=1)
+    # Папка со снимками относительно DATA_DIR, без абсолютного пути.
+    image_subdir: str = Field(min_length=1)
     preprocess_versions: list[str] = Field(min_length=1)
 
 
@@ -41,9 +43,11 @@ class ModelSection(BaseModel):
 
 
 class TrainSection(BaseModel):
+    # Потолок эпох. На CPU он небольшой, ранний останов смотрит на val.
     epochs: int = Field(gt=0)
     batch_size: int = Field(gt=0)
     learning_rate: float = Field(gt=0)
+    early_stopping_patience: int = Field(gt=0)
 
 
 class AugmentSection(BaseModel):

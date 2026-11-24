@@ -21,6 +21,7 @@ __pycache__/
 .coverage
 htmlcov/
 mlruns/
+artifacts/runs/
 .dvc/cache/
 .dvc/tmp/
 .dvc/config.local
