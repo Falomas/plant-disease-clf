@@ -10,7 +10,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from plant_disease.classes import CLASS_FOLDERS, SOURCE_REPO, SOURCE_VARIANT
+from plant_disease.classes import (
+    CLASS_FOLDERS,
+    SOURCE_COMMIT,
+    SOURCE_REPO,
+    SOURCE_VARIANT,
+)
 
 FILTERED = ROOT / "data" / "filtered"
 CLONE_DIR = ROOT / "data" / "_upstream"
@@ -40,20 +45,44 @@ def main():
         [
             "git",
             "clone",
-            "--depth",
-            "1",
             "--filter=blob:none",
             "--sparse",
+            "--no-checkout",
             SOURCE_REPO,
             str(CLONE_DIR),
         ]
     )
+    run(
+        [
+            "git",
+            "-C",
+            str(CLONE_DIR),
+            "fetch",
+            "--depth",
+            "1",
+            "origin",
+            SOURCE_COMMIT,
+        ]
+    )
     paths = [f"{SOURCE_VARIANT}/{name}" for name in CLASS_FOLDERS]
     run(["git", "-C", str(CLONE_DIR), "sparse-checkout", "set", "--cone", *paths])
+    run(
+        [
+            "git",
+            "-c",
+            "advice.detachedHead=false",
+            "-C",
+            str(CLONE_DIR),
+            "checkout",
+            SOURCE_COMMIT,
+        ]
+    )
 
     commit = subprocess.check_output(
         ["git", "-C", str(CLONE_DIR), "rev-parse", "HEAD"], text=True
     ).strip()
+    if commit != SOURCE_COMMIT:
+        sys.exit(f"ожидался коммит {SOURCE_COMMIT}, получен {commit}")
 
     copied = 0
     for name in CLASS_FOLDERS:
