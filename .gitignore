@@ -4,8 +4,9 @@ venv/
 .env
 .env.local
 
-# Данные и веса моделей
-data/
+# Изображения не коммитим. Файл data/*.dvc — указатель DVC, его оставляем.
+/data/*
+!/data/*.dvc
 *.pt
 *.pth
 *.onnx
@@ -22,6 +23,7 @@ htmlcov/
 mlruns/
 .dvc/cache/
 .dvc/tmp/
+.dvc/config.local
 
 # Сборки
 build/
